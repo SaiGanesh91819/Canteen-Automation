@@ -1,0 +1,283 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&family=Raleway:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Campus Eats</title>
+    <link rel="stylesheet" href="{% static 'user_profile_css.css' %}">
+    <link rel="stylesheet" href="{% static 'cart_page_css.css' %}">
+    <link rel="stylesheet" href="{% static 'home_page_css.css' %}">
+</head>
+<body> 
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats logo">
+        </div>
+        <div class="header_nav">
+            <nav class="navs">
+                <ul>
+                    <li><a class="h" href="/home/">Home</a></li>
+                    <li><a class="h" href="/contact/">Contact</a></li>
+                    <li><a class="h" href="/about/">About</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="icons">
+            <a href="#" id="toggle_theme">
+                <img class="cp" id="theme_icon" src="{% static 'images/night_mode.png' %}" 
+                    data-light="{% static 'images/night_mode.png' %}" 
+                    data-dark="{% static 'images/light_mode.png' %}" alt="Theme icon">
+            </a>            
+            <a href="/cart/"><img class="cp" src="{% static 'images/cart_png.png' %}" alt="cart icon"></a>
+            <div class="profile-container">
+                <a href="#" id="profile-trigger">
+                    <img class="cp profile-icon" src="{% static 'images/profile_png.png' %}" alt="profile icon">
+                </a>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div class="user-info">
+                        <span class="username">{{ request.user.username }}</span>
+                    </div>
+                    <a href="/profile/">My Profile</a>
+                    <hr>
+                    <form action="/logout/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">LOGOUT</button>
+                    </form>
+                </div>
+            </div>    
+        </div>
+    </header>
+
+    <div class="cart-container">
+        <div class="cart-header">
+            <h1>Your Shopping Cart</h1>
+        </div>
+        <div class="cart-items">
+            <div class="cart-items">
+                {% for product in products %}
+                <div class="cart-item" data-product_id="{{ product.id }}">
+                    <img src="/media/{{ product.item_img }}" alt="Product Image" class="product-img">
+                    <div class="item-details">
+                        <h2>{{ product.item_name }}</h2>
+                        <p class="price" name="price" data-price="{{ product.item_price }}">₹{{ product.item_price }}</p>
+                        <span>Availability: {{ product.item_availability }}</span>
+                        <div class="quantity-controls">
+                            {% for key, value in product_quantities.items %}
+                            {% if key == product.id|slugify %}
+                            <input type="number" value="{{ value }}" min="1" max="{{ product.item_availability }}" class="quantity-input" name="quantity" data-product-id="{{ product.id }}">
+                            {% endif %}
+                            {% endfor %}
+                            <button class="remove-btn" data-product_id="{{ product.id }}">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="cart-footer">
+            <div class="total-price">
+                <h2>Total: <span class="total_price">{{ total_price }}</span></h2>
+            </div>
+            <div class="buttons">
+                <button class="btn checkout" id="pay-btn">Proceed to Payment</button>
+                <form action="/items/all/"><button class="btn back-to-shop" >Back to Shop</button></form>
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Code Section -->
+    <div id="qr-container" style="display: none; text-align: center; margin-top: 20px; border: 2px solid #000; padding: 20px; border-radius: 10px;">
+        <h2>Scan to Pay</h2>
+        <img id="qr-code" src="" alt="UPI QR Code" style="width: 300px; height: 300px;">
+        <p>Please scan the QR code with your UPI app to complete the payment.</p>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats Logo">
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="/home/">Home</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/about/">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="#"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn"></a>
+                <a href="#"><img src="{% static 'images/mail.png' %}" alt="Mail"></a>
+                <a href="#"><img src="{% static 'images/instagram.png' %}" alt="Instagram"></a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2025 Campus Eats</p>
+                <p>All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('pay-btn').addEventListener('click', function() {
+            let amount = document.querySelector('.total_price').innerHTML;
+            let len = amount.length;
+            if ((amount.slice(1,len))>0){
+                fetch('/generate-upi-link/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.upi_link) {
+                        console.log("Generated UPI Link:", data.upi_link);
+
+                        // ✅ Detect if the user is on a mobile device
+                        let isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+                        if (isMobile) {
+                            // ✅ Open UPI payment link only on mobile
+                            window.location.href = data.upi_link;
+                        } else {
+                            // ❌ Desktop browser detected, show QR Code
+                            document.getElementById('qr-container').style.display = 'block';
+                            document.getElementById('qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(data.upi_link)}`;
+                        }
+                    } else {
+                        alert("Failed to generate UPI link. Please try again.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Error processing payment. Please try again.");
+                });
+            }
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on('click', '.remove-btn', function (e) {
+            e.preventDefault();
+            let product_id = $(this).data('product_id');
+            let csrfToken = $("meta[name='csrf-token']").attr("content"); 
+            console.log('abcdefgh');
+            $.ajax({
+                type: 'POST',
+                url: '/remove_item/',
+                data: {
+                    product_id: product_id,
+                    csrfmiddlewaretoken: csrfToken,
+                    action: 'post'
+                },
+                success: function (json) {
+                    console.log(json);
+                    location.reload();
+                    alert("Product removed from cart !");
+                    // Update the cart UI here if needed
+                },
+                error: function (xhr, errmsg, err) {
+                    console.error("AJAX error: " + xhr.status + ": " + xhr.responseText);
+                }
+            });
+        });
+
+        function updateTotalPrice() {
+            let totalPrice = 0;
+            document.querySelectorAll(".cart-item").forEach(item => {
+                let priceElement = item.querySelector(".price");
+                let quantity = item.querySelector(".quantity-input").value;
+                let unitPrice = parseFloat(priceElement.getAttribute("data-price"));
+                totalPrice += unitPrice * quantity;
+            });
+            document.querySelector(".total-price span").textContent = `₹${totalPrice.toFixed(2)}`;
+        }
+
+        document.querySelectorAll(".quantity-input").forEach(input => {
+            input.addEventListener("input", handleInputChange);
+            input.addEventListener("blur", handleInputBlur);
+        });
+
+        function handleInputChange(event) {
+            let input = event.target;
+            let quantity = input.value;
+            let maxQuantity = parseInt(input.getAttribute("max"));
+            let priceElement = input.closest(".cart-item").querySelector(".price");
+            let unitPrice = parseFloat(priceElement.getAttribute("data-price"));
+
+            quantity = quantity.replace(/[^0-9]/g, '');
+
+            if (quantity < 1) {
+                quantity =            quantity = 1;
+        }
+
+        if (quantity > maxQuantity) {
+            quantity = maxQuantity;
+        }
+
+        input.value = quantity;
+        priceElement.textContent = `₹${(unitPrice * quantity).toFixed(2)}`;
+
+        updateTotalPrice();  // Update the total price
+    }
+
+    function handleInputBlur(event) {
+        let input = event.target;
+        let quantity = parseInt(input.value);
+        let maxQuantity = parseInt(input.getAttribute("max"));
+
+        if (quantity < 1) {
+            input.value = 1;
+        } else if (quantity > maxQuantity) {
+            input.value = maxQuantity;
+        }
+
+        let priceElement = input.closest(".cart-item").querySelector(".price");
+        let unitPrice = parseFloat(priceElement.getAttribute("data-price"));
+        priceElement.textContent = `₹${(unitPrice * input.value).toFixed(2)}`;
+
+        updateTotalPrice();  // Update the total price
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".quantity-input").forEach(input => {
+            input.addEventListener("input", handleInputChange);
+            input.addEventListener("blur", handleInputBlur);
+        });
+
+        updateTotalPrice();  // Initial update of the total price
+    });
+
+    $(document).on('change', '.quantity-input', function (e) {
+            e.preventDefault();
+            let quantity = $(this).val();
+            let product_id = $(this).closest('.cart-item').data('product_id');
+            let csrfToken = $("meta[name='csrf-token']").attr("content");
+
+            $.ajax({
+                type: 'POST',
+                url: '/update_quantity/',
+                data: {
+                    product_id: product_id,
+                    quantity: quantity,
+                    csrfmiddlewaretoken: csrfToken,
+                    action: 'post'
+                },
+                success: function (json) {
+                    console.log(json);
+                    alert("Quantity updated!");
+                    // Update total price or any other UI element if needed
+                },
+                error: function (xhr, errmsg, err) {
+                    console.error("AJAX error: " + xhr.status + ": " + xhr.responseText);
+                }
+            });
+        });
+
+</script>
+
+<script src="{% static 'home_page_js.js' %}"></script>
+</body>
+</html>

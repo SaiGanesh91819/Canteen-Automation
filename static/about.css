@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    box-sizing: border-box;
+    background-color: #fbfbfb;
+    background-image: url('dark_theme_logobg.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 55vh 70px;
+    background-size: 50%;
+    transition: background-color 1.5s ease, background-image 1.5s ease;
+}
+
+body.dark-theme {
+    background-color: #000000;
+    background-image: url('dark_theme_logobg.png');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 55vh 70px;
+    background-size: 50%;
+}
+
+header {
+    top: -10px;
+    background-color: #e4c556;
+    background-image: linear-gradient(90deg, #c9a319 0%, #c3510e 80%);
+    width: 100%;
+    height: 170px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    z-index: 100;
+    transition: background-color 1.5s ease, background-image 1.5s ease;
+}
+
+body.dark-theme header {
+    background-color: #c3510e;
+    background-image: linear-gradient(90deg, #505050 0%, #a3a3a3 100%);
+}
+
+.logo {
+    width: 200px;
+    height: 170px;
+}
+
+.logo img {
+    width: 100%;
+    height: auto;
+}
+
+.header_nav {
+    margin-left: 20px;
+}
+
+.navs ul {
+    display: flex;
+    list-style: none;
+}
+
+.navs ul li {
+    margin-left: 20px;
+}
+
+.navs ul li a {
+    text-decoration: none;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: xx-large;
+    color: white;
+    transition: ease 0.5s;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    display: inline-block;
+}
+
+.navs ul li a:hover{
+    transform: scale(1.1);
+    color: #000;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.493);
+}
+
+body.dark-theme .navs ul li a {
+    color: #ff6810; 
+    font-weight: 400;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.978);
+    transition: ease 0.5s;
+}
+
+body.dark-theme .navs ul li a:hover{
+    color: #000;
+    text-shadow: 0 0 10px rgb(185, 185, 185);
+}
+
+body.dark-theme .cp {
+    filter: invert(60%) sepia(100%) saturate(5000%) hue-rotate(360deg) brightness(100%) contrast(100%) drop-shadow(0 0 10px #ff6810);
+}
+
+
+.icons {
+    display: flex;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.cp {
+    margin-left: 30px;
+    width: 40px;
+    height: 40px;
+}
+
+
+/*......................................*/
+
+.footer {
+    background-color: #2c2d2c;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: background-color 1.5s ease, box-shadow 1.5s ease;
+}
+
+body.dark-theme .footer {
+    background-color: rgb(38, 38, 38);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-logo img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 15px;
+}
+
+.footer-social {
+    margin-top: 5px;
+    align-items: center;
+}
+
+.footer-links ul li a {
+    text-decoration: none;
+    color: white;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: large;
+    transition: color 1.5s ease;
+}
+
+body.dark-theme .footer-links ul li a {
+    color: #ccc;
+}
+
+.footer-social a {
+    margin: 0 10px;
+}
+
+.footer-social img {
+    width: 30px;
+    height: 30px;
+}
+
+.footer-info {
+    font-family: 'Raleway', sans-serif;
+    font-size: small;
+}
+
+
+/*.............................................*/
+.about{
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.about_div{
+    padding: 30px;
+    box-sizing: border-box;
+    line-height: 4vh;
+    width: 80%;
+    font-family: raleway;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 30px;
+    box-shadow: 0 0 10px #2c2d2c;
+    font-family: 'Raleway', sans-serif;
+    
+}
+
+body.dark-theme .about_div{
+    background-color: #2c2d2c;
+    box-sizing: border-box;
+    color: white;
+
+    box-shadow: 0 0 10px #ff6810;
+    width: 80%;
+    font-family: 'Raleway', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}

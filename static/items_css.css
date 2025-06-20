@@ -1,0 +1,117 @@
+
+.card{
+    display:inline-block;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    font-family: 'Raleway',sans-serif;
+}
+
+.food-card {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    background: rgba(255, 255, 255, 0.15);
+
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.385);
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.food-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.food-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.food-details {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.food-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+    font-family: raleway;
+    font-weight: 900;
+    font-size: x-large;
+}
+
+.availability {
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: inline-block;
+}
+
+.in-stock {
+    background-color: #d4f7dc;
+    color: #2a9d8f;
+}
+
+.out-of-stock {
+    background-color: #f8d7da;
+    color: #d63031;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ff6600;
+    margin: 5px 0;
+}
+
+.add-to-cart {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart:hover {
+    background: linear-gradient(45deg, #feb47b, #ff7e5f);
+    transform: scale(1.1);
+}
+
+.food-items-container{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+body.dark-theme .food-name{
+    color: white;
+}
+
+.no-items{
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+}
+
+.food-card-out-of-stock{
+    filter: invert(40%);
+}
+
+body.dark-theme .food-card{
+    background-color: #454545;
+    border-radius: 15px;
+}

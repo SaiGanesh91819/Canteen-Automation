@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&family=Raleway:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Eats</title>
+    <link rel="stylesheet" href="{% static 'home_page_css.css' %}">
+    <link rel="stylesheet" href="{% static 'contact_css.css' %}">
+</head>
+<body> 
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats logo">
+        </div>
+        <div class="header_nav">
+            <nav class="navs">
+                <ul>
+                    <li><a class="h" href="/home/">Home</a></li>
+                    <li><a class="h" href="/contact/">Contact</a></li>
+                    <li><a class="h" href="/about/">About</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="icons">
+            <a href="#" id="toggle_theme">
+                <img class="cp" id="theme_icon" src="{% static 'images/night_mode.png' %}" 
+                    data-light="{% static 'images/night_mode.png' %}" 
+                    data-dark="{% static 'images/light_mode.png' %}" alt="Theme icon">
+            </a>            
+            <a href="/cart/"><img class="cp" src="{% static 'images/cart_png.png' %}" alt="cart icon"></a>
+            <div class="profile-container">
+                <a href="#" id="profile-trigger">
+                    <img class="cp profile-icon" src="{% static 'images/profile_png.png' %}" alt="profile icon">
+                </a>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div class="user-info">
+                        <span class="username">saiganesh_9</span>
+                    </div>
+                    <a href="/profile/">My Profile</a>
+                    <hr>
+                    <form action="/logout/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">LOGOUT</button>
+                    </form>
+                </div>
+            </div>   
+        </div>
+    </header>
+
+
+    <div class="contact_body">
+        <h3>Please share us your queries.</h3>
+        <p>{{ msg }}</p>
+        <form action="/submit_query/" class="contact_form" method="post">
+            {% csrf_token %}
+            <div class="form_item">
+                <label for="topic">Please provide us with the issue : </label>
+                <input type="text" height="75px" width="300px" maxlength="200" placeholder="Enter your issue here..." name="topic">
+            </div>
+            <div class="form_item">
+                <label for="description">Please provide us with a detailed description : </label>
+                <textarea name="description" id="description" rows="10" cols="100" placeholder="Enter your text here..."></textarea>
+            </div>
+            <button type="submit">Submit Response</button>
+        </form>
+    </div>
+
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats Logo">
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="/home/">Home</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/about/">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="#"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn"></a>
+                <a href="#"><img src="{% static 'images/mail.png' %}" alt="Mail"></a>
+                <a href="#"><img src="{% static 'images/instagram.png' %}" alt="instagram"></a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2025 Campus Eats</p>
+                <p>All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{% static 'home_page_js.js' %}">
+        
+    </script>
+    </body>
+    </html>

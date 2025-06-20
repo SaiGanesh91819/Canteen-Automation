@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup Form</title>
+    <link rel="stylesheet" href="{% static 'login_css.css' %}">
+</head>
+<body>
+    <div class="login_body">
+        <img src="{% static 'images/dark_theme_logo.png' %}" class="logo" alt="logo" width="200px">
+        <div class="container">
+            <div class="form-container">
+                <div class="msg">{{ msg }}</div>
+                
+                
+                <form id="loginForm" class="form-content" method="post" >
+                    {% csrf_token %}
+                    <h2>Login</h2>
+                    <input type="text" hidden class="mode" name="action" value="login">
+                    <input type="text" placeholder="Username" required name="Username" autocomplete="additional-name">
+                    <input type="password" placeholder="Password" required name="password">
+                    <button type="'submit">Login</button>
+                    <p>Don't have an account? <span onclick="toggleForm()">Sign up</span></p>
+                </form>
+
+                <form id="signupForm" class="form-content hidden" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h2>Sign Up</h2>
+                    <input type="text" hidden class="mode" name="action" value="register">
+                    <input type="text" placeholder="Username" required autocomplete="additional-name" name="Username">
+                    <input type="text" placeholder="First Name" required autocomplete="additional-name" name="f_name">
+                    <input type="text" placeholder="Last Name" required autocomplete="additional-name" name="l_name">
+                    <input type="tel" placeholder="Mobile Number" required maxlength="10" autocomplete="tel" name="mob_number">
+                    <input type="email" placeholder="Email" required autocomplete="additional-name" name="email">
+                    <input type="text" placeholder="Branch" required autocomplete="additional-name" name="branch">
+                    <input type="text" placeholder="Registered Number" maxlength="10" required autocomplete="additional-name" name="reg_number">
+                    <input type="password" placeholder="Password" required name="password">
+                    <label for="user_img">Upload your photo</label>
+                    <input type="file" placeholder="Upload your image" required name="user_img">
+                    <input type="hidden" name="mode" value="signup">
+                    <button>Sign Up</button>
+                    <p>Already have an account? <span onclick="toggleForm()">Log in</span></p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'login_js.js' %}"></script>
+</body>
+</html>
+ 

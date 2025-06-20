@@ -1,0 +1,146 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@100..900&family=Raleway:wght@100..900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>Campus Eats</title>
+    <link rel="stylesheet" href="{% static 'home_page_css.css' %}">
+    <link rel="stylesheet" href="{% static 'items_css.css' %}">
+</head>
+<body> 
+    <header>
+        <div class="logo">
+            <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats logo">
+        </div>
+        <div class="header_nav">
+            <nav class="navs">
+                <ul>
+                    <li><a class="h" href="/home/">Home</a></li>
+                    <li><a class="h" href="/contact/">Contact</a></li>
+                    <li><a class="h" href="/about/">About</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="icons">
+            <a href="#" id="toggle_theme">
+                <img class="cp" id="theme_icon" src="{% static 'images/night_mode.png' %}" 
+                    data-light="{% static 'images/night_mode.png' %}" 
+                    data-dark="{% static 'images/light_mode.png' %}" alt="Theme icon">
+            </a>            
+            <a href="/cart/"><img class="cp" src="{% static 'images/cart_png.png' %}" alt="cart icon"></a>
+            <div class="profile-container">
+                <a href="#" id="profile-trigger">
+                    <img class="cp profile-icon" src="{% static 'images/profile_png.png' %}" alt="profile icon">
+                </a>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div class="user-info">
+                        <span class="username">saiganesh_9</span>
+                    </div>
+                    <a href="/profile/">My Profile</a>
+                    <hr>
+                    <form action="/logout/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">LOGOUT</button>
+                    </form>
+                </div>
+            </div>    
+        </div>
+    </header>
+
+
+    <form class="search-bar" method="get" action="/items/search/">
+        <input type="text" placeholder="Search for the dish...." name="search"/>
+        <button>
+            <img src="{% static 'images/search_icon.png' %}" alt="Search" />
+        </button>
+    </form>
+
+
+    <main>
+        <section class="food-items-container">
+            {% for item in items_list %}
+            <div class="card">
+                <div class="food-card {% if item.item_availability %}food-card-in-stock{% else %}food-card-out-of-stock{% endif %}">
+                    <img src="/media/{{item.item_img}}" alt="{{ item.item_name }}" class="food-image">
+                    <div class="food-details">
+                        <h2 class="food-name">{{ item.item_name }}</h2>
+                        <p class="availability {% if item.item_availability %}in-stock{% else %}out-of-stock{% endif %}">
+                            {% if item.item_availability %}Available&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item.item_availability }} {% else %}Out of Stock{% endif %}
+                        </p>
+                        <p class="price">{{ item.item_price|floatformat:2 }} RS</p>
+                        {% if item.item_availability %}
+                        <button class="add-to-cart" data-product_id={{item.item_id}}>Add to Cart</button>
+                        {% else %}
+                        <h4 class="not_add">Can't add to Cart</h4>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p class="no-items">No items available in this category.</p>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="{% static 'images/dark_theme_logo.png' %}" alt="Campus Eats Logo">
+            </div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="/home/">Home</a></li>
+                    <li><a href="/contact/">Contact</a></li>
+                    <li><a href="/abput/">About</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <a href="#"><img src="{% static 'images/linkedin.png' %}" alt="LinkedIn"></a>
+                <a href="#"><img src="{% static 'images/mail.png' %}" alt="Mail"></a>
+                <a href="#"><img src="{% static 'images/instagram.png' %}" alt="instagram"></a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2025 Campus Eats</p>
+                <p>All rights reserved</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{% static 'home_page_js.js' %}">
+        
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).on('click', '.add-to-cart', function (e) {
+        e.preventDefault();
+        let product_id = $(this).data('product_id');
+        let csrfToken = $("meta[name='csrf-token']").attr("content"); 
+    
+        $.ajax({
+            type: 'POST',
+            url: '/cart_add/',
+            data: {
+                product_id: product_id,
+                csrfmiddlewaretoken: csrfToken,
+                action: 'post'
+            },
+            success: function (json) {
+                console.log(json);
+                alert("Product added to cart!"); 
+            },
+            error: function (xhr, errmsg, err) {
+                console.error("AJAX error: " + xhr.status + ": " + xhr.responseText);
+            }
+        });
+    });
+    
+    </script>
+
+    </body>
+    </html>
